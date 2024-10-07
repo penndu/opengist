@@ -28,7 +28,7 @@ It is similiar to [GitHub Gist](https://gist.github.com/), but open-source and c
 * OAuth2 login with GitHub, GitLab, Gitea, and OpenID Connect
 * Restrict or unrestrict snippets visibility to anonymous users
 * Docker support
-* [More...](/docs/index.md#features)
+* [More...](/docs/introduction.md#features)
 
 ## Quick start
 
@@ -47,8 +47,6 @@ It can be used in a `docker-compose.yml` file :
 3. Opengist is now running on port 6157, you can browse http://localhost:6157
 
 ```yml
-version: "3"
-
 services:
   opengist:
     image: ghcr.io/thomiceli/opengist:1.7

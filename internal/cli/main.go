@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/thomiceli/opengist/internal/auth/webauthn"
 	"github.com/thomiceli/opengist/internal/config"
 	"github.com/thomiceli/opengist/internal/db"
 	"github.com/thomiceli/opengist/internal/git"
@@ -108,13 +109,18 @@ func Initialize(ctx *cli.Context) {
 	if err := os.MkdirAll(filepath.Join(homePath, "custom"), 0755); err != nil {
 		log.Fatal().Err(err).Send()
 	}
-	log.Info().Msg("Database file: " + filepath.Join(homePath, config.C.DBFilename))
-	if err := db.Setup(filepath.Join(homePath, config.C.DBFilename), false); err != nil {
+
+	db.DeprecationDBFilename()
+	if err := db.Setup(config.C.DBUri, false); err != nil {
 		log.Fatal().Err(err).Msg("Failed to initialize database")
 	}
 
 	if err := memdb.Setup(); err != nil {
 		log.Fatal().Err(err).Msg("Failed to initialize in memory database")
+	}
+
+	if err := webauthn.Init(config.C.ExternalUrl); err != nil {
+		log.Error().Err(err).Msg("Failed to initialize WebAuthn")
 	}
 
 	if config.C.IndexEnabled {
